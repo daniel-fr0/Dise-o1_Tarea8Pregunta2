@@ -14,6 +14,11 @@
 from multiplicacionDePolinomios import multiplicarFFT, multiplicar_ingenuo
 from eratostenes import factores
 
+# utiliza la criba de Eratostenes optimizada para obtener los factores de los numeros
+# y luego multiplica los polinomios de factores utilizando FFT
+# finalmente busca el maximo coeficiente entre 1 y N
+# el peso mayor de este algoritmo es la multiplicacion de polinomios, que es O(N log N)
+# por lo que el algoritmo es O(N log N)
 def respuesta(N):
 	# Obtengo la cantidad de factores para cada numero entre 1 y N-1
 	# esto utiliza la criba de Eratostenes optimizada y tiene un costo de O(N log N)
@@ -29,7 +34,7 @@ def respuesta(N):
 	# si se quiere obtener el maximo, se busca el indice el mayor coeficiente entre 1 y N
 	maximo = 0
 	indice = -1
-	for i in range(N, 0, -1):
+	for i in range(N, 0, -1):	# O(N)
 		if q[i] > maximo:
 			maximo = q[i]
 			indice = i
