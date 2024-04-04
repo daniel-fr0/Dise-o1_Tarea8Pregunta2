@@ -1,4 +1,4 @@
-from FFT import FFT, round_complex, evaluate
+from FFT import FFT, round_complex
 from cmath import exp, pi
 
 def multiplicarFFT(a, b):
@@ -9,20 +9,20 @@ def multiplicarFFT(a, b):
 	m = 1
 	while m < n:
 		m *= 2
+	w = exp(2j * pi / m)
 
 	# Se rellenan los polinomios con ceros para que tengan el mismo grado y potencia de 2
 	a += [0] * (m - len(a))
 	b += [0] * (m - len(b))
 
 	# Se aplica la FFT a los polinomios y se multiplica punto a punto
-	a = FFT(a)
-	b = FFT(b)
+	a = FFT(a, w)
+	b = FFT(b, w)
 	res = [a * b for a, b in zip(a, b)]
 
 	# Para volver a la representacion de polinomios se utiliza la FFT inversa
-	res = FFT(res, inverse=True)
-	res = [round_complex(x) for x in res]
-	return res
+	res = FFT(res, 1/w, inverse=True)
+	return [round_complex(x, 0) for x in res]
 
 def multiplicar_ingenuo(a, b):
 	n = len(a) + len(b) - 1
@@ -39,10 +39,15 @@ def multiplicar_ingenuo(a, b):
 
 if __name__ == "__main__":
 	print("Multiplicacion de polinomios")
-	a = [1, 2, 3]
-	b = [1, 2, 3]
+	a = [1, 2, 3, 4, 5, 6, 7]
+	b = [1, 2, 3, 4, 5, 6, 7]
 	print(f"a = {a}")
 	print(f"b = {b}")
-	print(f"Multiplicacion ingenua: {multiplicar_ingenuo(a, b)}")
-	print(f"Multiplicacion con FFT: {multiplicarFFT(a, b)}")
+	abIngenuo = multiplicar_ingenuo(a.copy(), b.copy())
+	abFFT = multiplicarFFT(a.copy(), b.copy())
+	print(f"Multiplicacion ingenua: {abIngenuo}")
+	print(f"Multiplicacion con FFT: {abFFT}")
+
+	for i in range(len(abIngenuo)):
+		assert abIngenuo[i] == abFFT[i]
 

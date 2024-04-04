@@ -1,50 +1,27 @@
 from cmath import exp, pi
-from math import sin,cos,pi
 
-# FFT extraido de
-# https://www.geeksforgeeks.org/fast-fourier-transformation-poynomial-multiplication/
-def FFT(a, inverse=False):
-
+# FFT basado en la clase
+def FFT(a, w, inverse=False):
+	if w.real == 1 and w.imag == 0 or len(a) == 1:
+		return a
+	
 	n = len(a)
+	par = FFT(a[0::2], w*w)
+	impar = FFT(a[1::2], w*w)
+	res = [0]*n
 
-	# if input contains just one element
-	if n == 1:
-		return [a[0]]
+	x = 1
+	for i in range(n//2):
+		res[i] = par[i] + x*impar[i]
+		res[i+n//2] = par[i] - x*impar[i]
+		x *= w
+		res[i] = round_complex(res[i])
+		res[i+n//2] = round_complex(res[i+n//2])
 
-	# For storing n complex nth roots of unity
-	theta = -2*pi/n
-
-	# Inversa de la FFT, para obtener los coeficientes de los polinomios hay que
-	# rotar en sentido contrario
 	if inverse:
-		theta *= -1
-
-	w = list( complex(cos(theta*i), sin(theta*i)) for i in range(n) ) 
+		return [x/n for x in res]
 	
-	# Separe coefficients
-	Aeven = a[0::2]
-	Aodd = a[1::2]
-
-	# Recursive call for even indexed coefficients
-	Yeven = FFT(Aeven) 
-
-	# Recursive call for odd indexed coefficients
-	Yodd = FFT(Aodd)
-
-	# for storing values of y0, y1, y2, ..., yn-1.
-	Y = [0]*n
-	
-	middle = n//2
-	for k in range(n//2):
-		w_yodd_k = w[k] * Yodd[k]
-		yeven_k = Yeven[k]
-		
-		Y[k]		 = round_complex(yeven_k + w_yodd_k)
-		Y[k + middle] = round_complex(yeven_k - w_yodd_k)
-	
-	if inverse:
-		Y = [y / n for y in Y]
-	return Y
+	return res
 
 def round_complex(c, precision=4):
 	real = round(c.real, precision)
@@ -69,16 +46,20 @@ if __name__ == "__main__":
 	w = exp(2j * pi / 8)
 
 	print("FFT = ")
-	pts = FFT(p)
+	pts = FFT(p, w)
 	for x in pts:
 		print(x)
 
 	print()
 	print("P = ")
 	for i in range(len(p)):
-		theta = -2*pi/8
-		w = complex(cos(theta*i), sin(theta*i))
-		x = round_complex(w)
-		y = round_complex(evaluate(p, w))
+		x = round_complex(w**i)
+		y = round_complex(evaluate(p, w**i))
 		print(f"{x:>16}\t---->\t{y:<}")
 		assert pts[i] == y
+
+	print()
+	print("FFT inversa = ")
+	pts = FFT(pts, 1/w, inverse=True)
+	for x in pts:
+		print(x)
