@@ -36,12 +36,12 @@ def factores(N):
 		factor = lp[x]
 		exponente = 0
 
-		count = 0
+		count = 1
 		while x > 1:
 			x //= lp[x]
 			exponente += 1
 			if factor != lp[x]:
-				count += exponente + 1
+				count *= exponente + 1
 				factor = lp[x]
 				exponente = 0
 		return count
@@ -61,4 +61,18 @@ def factores(N):
 		res[i] = count_factors(i)
 
 	return res[1:]
-print(primos(200))
+
+
+if __name__ == "__main__":
+	# Ejemplos
+	print("Primos desde el 1 hasta el 200:")
+	print(primos(200))
+	print()
+
+	print("Valores obtenidos por la criba de eratostenes optimizada vs valores obtenidos por fuerza bruta")
+	print("Numero de divisores de cada numero entre 1 y 60:")
+	facts = factores(60)
+	divs = [sum(1 for d in range(1, n+1) if n % d == 0) for n in range(1, 61)]
+	for i, f in enumerate(facts):
+		print(f"{i+1}: {f} vs {divs[i]}")
+		assert f == divs[i]
