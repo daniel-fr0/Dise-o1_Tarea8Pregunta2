@@ -4,7 +4,7 @@
 # los numeros del 1 al N//2 cada uno suma con su complemento a N
 # i + (N-i) = N
 def sumandos(n):
-	return [(i, n-i) for i in range(1, n//2+1)]
+	return [(i, n-i) for i in range(1, n)]
 
 # luego se obtienen los divisores de a y b y se unen a las formas de
 # descomponer a los sumandos de N
