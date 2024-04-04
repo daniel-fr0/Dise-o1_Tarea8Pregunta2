@@ -33,3 +33,7 @@ for r in respuestaInocente(n):
 	print(r)
 
 print(f"En total son {len(respuestaInocente(n))}")
+
+# Si solo se necesita la cantidad de respuestas y no las respuestas en si
+# se puede hacer en O(N^2)
+print(f"En total son {sum( len(divisores(p)) * len(divisores(q)) for p,q in sumandos(n) )}")
