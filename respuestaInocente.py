@@ -15,8 +15,18 @@ def divisores(n):
 # una revisar todos los divisores de cada sumando
 # para cada divisor de a y b se obtiene una respuesta
 # esta seria la forma inocente de resolver el problema y tomaria O(N^3)
-def respuestaInocente(n):
+def decompSecuencias(n):
 	return [(a, b, c, d) for p,q in sumandos(n) for a,b in divisores(p) for c,d in divisores(q)]
+
+# Si solo se necesita la cantidad de respuestas y no las respuestas en si
+# se puede hacer en O(N^2)
+def decomp(n):
+	return sum( len(divisores(p)) * len(divisores(q)) for p,q in sumandos(n) )
+
+# si se busca el mayor valor ejecutando esto entre 1 y N
+# se obtiene la respuesta inocente en O(N^3)
+def respuestaInocente(n):
+	return max([decomp(i) for i in range(1, n+1)])
 
 
 n = 12
@@ -29,11 +39,9 @@ for r in divisores(n):
 	print(r)
 
 print(f"Respuesta Inocente de {n}:")
-for r in respuestaInocente(n):
+for r in decompSecuencias(n):
 	print(r)
 
-print(f"En total son {len(respuestaInocente(n))}")
+print(f"En total son {len(decompSecuencias(n))}")
 
-# Si solo se necesita la cantidad de respuestas y no las respuestas en si
-# se puede hacer en O(N^2)
-print(f"En total son {sum( len(divisores(p)) * len(divisores(q)) for p,q in sumandos(n) )}")
+print(f"Respuesta del maximo de las descomposiciones entre 1 y 100: {respuestaInocente(100)}")

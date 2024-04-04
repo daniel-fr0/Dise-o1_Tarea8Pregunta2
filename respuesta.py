@@ -21,12 +21,9 @@ def respuesta(N):
 
 	# se incluye el 0 para que haya un coeficiente para el grado 0
 	p = [0] + p
-	# for i in range(len(p)):
-		# print(f"{i}: {p[i]}")
 
 	# Multiplico los polinomios de factores, utilizando FFT esto tomaria O(N log N)
-	# q = multiplicarFFT(p, p) # tiene problemas con los resultados al ser numeros complejos
-	q = multiplicar_ingenuo(p, p)
+	q = multiplicarFFT(p, p) # tiene problemas con los resultados al ser numeros complejos
 
 	# La cantidad de formas de descomponer un Y en dos sumandos es el coeficiente de x^Y
 	# si se quiere obtener el maximo, se busca el indice el mayor coeficiente entre 1 y N
@@ -43,4 +40,5 @@ def respuesta(N):
 
 print(respuesta(5)) # 14 para el numero 5
 print(respuesta(12)) # 80 para el numero 12
+print(respuesta(100)) # 2488 para el numero 96
 print(respuesta(1000)) # 64200 para el numero 960
